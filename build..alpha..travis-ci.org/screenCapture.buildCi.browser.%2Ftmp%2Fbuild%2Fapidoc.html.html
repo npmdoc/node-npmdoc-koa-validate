@@ -56,6 +56,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.koa-validate.koa-validate">
+            function <span class="apidocSignatureSpan"></span>koa-validate
+            <span class="apidocSignatureSpan">(app)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.koa-validate.FileValidator">
             function <span class="apidocSignatureSpan">koa-validate.</span>FileValidator
             <span class="apidocSignatureSpan">(context, key, value, exists, params, deleteOnCheckFailed)</span>
@@ -1060,6 +1069,57 @@
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.koa-validate" id="apidoc.module.koa-validate">module koa-validate</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.koa-validate.koa-validate" id="apidoc.element.koa-validate.koa-validate">
+        function <span class="apidocSignatureSpan"></span>koa-validate
+        <span class="apidocSignatureSpan">(app)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">koa-validate = function (app) {
+	app.context.checkQuery = function(key,transFn) {
+		return new Validator(this, key, getValue(this.request.query,key,transFn), hasKey(this.request.query, key, transFn),this.request
+.query);
+	};
+	app.context.checkParams = function(key) {
+		return new Validator(this, key, this.params[key], key in this.params,this.params);
+	};
+	app.context.checkHeader = function(key) {
+		return new Validator(this, key, this.header[key], key in this.header,this.header);
+	};
+	app.context.checkBody = function(key,transFn) {
+		var body = this.request.body;
+
+		if(!body) {
+			if(!this.errors){
+				this.errors = ['no body to check!'];
+			}
+			return new Validator(this, null, null,false, null ,false );
+		}
+		var body =  body.fields || body;	// koa-body fileds. multipart fields in body.fields
+		return new Validator(this, key,getValue(body,key,transFn), hasKey(body, key, transFn), body);
+	};
+	app.context.checkFile = function(key , deleteOnCheckFailed) {
+		if('undefined' == typeof this.request.body || 'undefined' == typeof this.request.body.files ) {
+			if(!this.errors){
+				this.errors = ['no file to check'];
+			}
+			return new Validator(this, null, null,false, null,false );
+		}
+		deleteOnCheckFailed = ('undefined' == typeof deleteOnCheckFailed?true :false);
+		var files = this.request.body.files;
+		return new FileValidator(this, key ,files&amp;&amp;files[key],!!(files&amp;&amp;files[key]) , this.request.body , deleteOnCheckFailed);
+	};
+	// return function* (next) {
+	// 	yield next;
+	// };
+
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
     <h2>
