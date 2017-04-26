@@ -1,6 +1,6 @@
 # npmdoc-koa-validate
 
-#### api documentation for  [koa-validate (v1.0.7)](https://github.com/RocksonZeta/koa-validate#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-koa-validate.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-koa-validate) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-koa-validate.svg)](https://travis-ci.org/npmdoc/node-npmdoc-koa-validate)
+#### basic api documentation for  [koa-validate (v1.0.7)](https://github.com/RocksonZeta/koa-validate#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-koa-validate.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-koa-validate) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-koa-validate.svg)](https://travis-ci.org/npmdoc/node-npmdoc-koa-validate)
 
 #### A koa params validate middleware.
 
@@ -77,7 +77,8 @@
         "test-cov": "NODE_ENV=test node --harmony ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require should",
         "test-travis": "NODE_ENV=test node --harmony ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require should"
     },
-    "version": "1.0.7"
+    "version": "1.0.7",
+    "bin": {}
 }
 ```
 
