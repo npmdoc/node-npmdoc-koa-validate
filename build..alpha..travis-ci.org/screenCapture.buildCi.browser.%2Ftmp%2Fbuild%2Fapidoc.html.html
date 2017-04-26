@@ -1230,7 +1230,23 @@
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+describe('koa-validate' , function(){
+	// this.timeout(100000);
+	it("file check ok" , function(done){
+		var app = appFactory.create(1);
+		app.router.post('/upload',function*(){
+			this.checkFile('empty').empty();
+			// this.checkFile('file1').empty().<span class="apidocCodeKeywordSpan">contentTypeMatch</span>(/^text/);
+			this.checkFile('file').empty().contentTypeMatch(/^application\//);
+			yield this.checkFile('file1').empty().move(__dirname+"/temp", function(file , context){
+			});
+			this.checkFile('file').notEmpty();
+			yield this.checkFile('file').notEmpty().copy(__dirname+"/tempdir/" , function(file , context){
+			});
+			yield this.checkFile('file').notEmpty().copy(__dirname);
+...</pre></li>
     </ul>
 
 
@@ -1309,7 +1325,26 @@ afterCopy:it can be a `function` or `function*`.interface:`function(fileObject,f
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkFile('file').notEmpty();
+			yield this.checkFile('file').notEmpty().copy(__dirname+"/tempdir/" , function(file , context){
+			});
+			yield this.checkFile('file').notEmpty().copy(__dirname);
+			yield this.checkFile('file').notEmpty().copy(function(){return __dirname+"/temp"});
+			yield (yield this.checkFile('file').notEmpty().fileNameMatch(/^.*.js$/).size(0,10*1024).suffixIn(['js']).
+copy(function*(obj){
+				return __dirname+"/temp";
+			})).<span class="apidocCodeKeywordSpan">delete</span>();
+			require('fs').unlinkSync(__dirname+'/temp');
+			require('fs').unlinkSync(__dirname+'/'+require('path').basename(this.request.body.files.file.path
+));
+			require('fs').unlinkSync(__dirname+'/tempdir/'+require('path').basename(this.request.body.files
+.file.path));
+			// require('fs').unlinkSync(__dirname+'/tempdir');
+			if(this.errors){
+				this.body = this.errors;
+				return;
+...</pre></li>
     </ul>
 
 
@@ -1330,7 +1365,26 @@ afterCopy:it can be a `function` or `function*`.interface:`function(fileObject,f
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			yield this.checkFile('file1').empty().move(__dirname+"/temp", function(file , context){
+			});
+			this.checkFile('file').notEmpty();
+			yield this.checkFile('file').notEmpty().copy(__dirname+"/tempdir/" , function(file , context){
+			});
+			yield this.checkFile('file').notEmpty().copy(__dirname);
+			yield this.checkFile('file').notEmpty().copy(function(){return __dirname+"/temp"});
+			yield (yield this.checkFile('file').notEmpty().<span class="apidocCodeKeywordSpan">fileNameMatch</span>(/^.*.js$/).
+size(0,10*1024).suffixIn(['js']).copy(function*(obj){
+				return __dirname+"/temp";
+			})).delete();
+			require('fs').unlinkSync(__dirname+'/temp');
+			require('fs').unlinkSync(__dirname+'/'+require('path').basename(this.request.body.files.file.path
+));
+			require('fs').unlinkSync(__dirname+'/tempdir/'+require('path').basename(this.request.body.files
+.file.path));
+			// require('fs').unlinkSync(__dirname+'/tempdir');
+			if(this.errors){
+...</pre></li>
     </ul>
 
 
@@ -1351,7 +1405,24 @@ afterCopy:it can be a `function` or `function*`.interface:`function(fileObject,f
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkFile('file0').size(10,10 );
+			this.checkFile('file').size(1024*100,1024*1024*10 );
+			this.checkFile('file1').size(1024*100,1024*1024*1024*10 );
+			this.checkFile('file2').suffixIn(['png']);
+			this.checkFile('file3').contentTypeMatch(/^image\/.*$/);
+			this.checkFile('file4').contentTypeMatch(/^image\/.*$/);
+			this.checkFile('file5').fileNameMatch(/\.png$/);
+			this.checkFile('file6').<span class="apidocCodeKeywordSpan">isImageContentType</span>("not image content type.&amp;#
+x22;);
+
+
+			if(9 === this.errors.length){
+				this.body = 'ok';
+				return ;
+			}else{
+				this.body = 'not ok';
+...</pre></li>
     </ul>
 
 
@@ -1493,7 +1564,26 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			yield this.checkFile('file1').empty().move(__dirname+"/temp", function(file , context){
+			});
+			this.checkFile('file').notEmpty();
+			yield this.checkFile('file').notEmpty().copy(__dirname+"/tempdir/" , function(file , context){
+			});
+			yield this.checkFile('file').notEmpty().copy(__dirname);
+			yield this.checkFile('file').notEmpty().copy(function(){return __dirname+"/temp"});
+			yield (yield this.checkFile('file').notEmpty().fileNameMatch(/^.*.js$/).size(0,10*1024).<span class="apidocCodeKeywordSpan
+">suffixIn</span>(['js']).copy(function*(obj){
+				return __dirname+"/temp";
+			})).delete();
+			require('fs').unlinkSync(__dirname+'/temp');
+			require('fs').unlinkSync(__dirname+'/'+require('path').basename(this.request.body.files.file.path
+));
+			require('fs').unlinkSync(__dirname+'/tempdir/'+require('path').basename(this.request.body.files
+.file.path));
+			// require('fs').unlinkSync(__dirname+'/tempdir');
+			if(this.errors){
+...</pre></li>
     </ul>
 
 
@@ -1765,7 +1855,24 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('whitelist').whitelist('ll');
+			this.checkBody('blacklist').blacklist('ll');
+			this.checkBody('encodeURI').decodeURI();
+			this.checkBody('decodeURI').encodeURI();
+			this.checkBody('encodeURIComponent').decodeURIComponent();
+			this.checkBody('decodeURIComponent').encodeURIComponent();
+			this.checkBody('rep').replace(',' ,'');
+			this.checkBody('base64').clone('base64Buffer').<span class="apidocCodeKeywordSpan">decodeBase64</span>(true
+);
+			this.checkBody('base64').decodeBase64();
+			this.checkBody('debase64').encodeBase64();
+			this.checkBody('hash').clone('md5').md5();
+			this.checkBody('hash').clone('sha1').sha1();
+			this.checkBody('hash').clone('num1' ,1);
+			this.checkBody('json').toJson();
+			//console.log(this.request.body)
+...</pre></li>
     </ul>
 
 
@@ -1787,7 +1894,23 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		req.post('/decodeURIComponent')
+		.send({uri:"%"})
+		.expect(500 , done);
+	});
+	it("bad uri decodeURI should not to be ok" , function(done){
+		var app = appFactory.create(1);
+		app.router.post('/decodeURI',function*(){
+			this.checkBody('uri').<span class="apidocCodeKeywordSpan">decodeURI</span>();
+			if(this.errors) {
+				this.status=500;
+			}else{
+				this.status=200;
+			}
+		});
+		var req = request(app.listen());
+...</pre></li>
     </ul>
 
 
@@ -1809,7 +1932,23 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+
+describe('koa-validate' , function(){
+	it("bad uri decodeURIComponent should not to be ok" , function(done){
+		var app = appFactory.create(1);
+		app.router.post('/decodeURIComponent',function*(){
+			this.checkBody('uri').<span class="apidocCodeKeywordSpan">decodeURIComponent</span>();
+			if(this.errors) {
+				this.status=500;
+			}else{
+				this.status=200;
+			}
+		});
+		var req = request(app.listen());
+...</pre></li>
     </ul>
 
 
@@ -1827,7 +1966,23 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		.expect(200)
+		.expect('ok' , done);
+	});
+	it('there sanitizers should be to okay' , function(done){
+		var url ="http://www.google.com/"
+		var app = appFactory.create(1);
+		app.router.post('/sanitizers',function*(){
+			this.checkBody('default').<span class="apidocCodeKeywordSpan">default</span>('default');
+			this.checkBody('int_').toInt();
+			this.checkBody('int_').toInt(null, 10, {min:20});
+			this.checkBody('int_').toInt(null, 10, {max:20});
+			this.checkBody('int_').toInt(null, 10, {min:20,max:20});
+			this.checkBody('octal_').toInt(null, 8);
+			this.checkBody('octal_').toInt(null, 8, {min:8});
+			this.checkBody('octal_').toInt(null, 8, {max:8});
+...</pre></li>
     </ul>
 
 
@@ -1882,7 +2037,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('encodeURI').decodeURI();
+			this.checkBody('decodeURI').encodeURI();
+			this.checkBody('encodeURIComponent').decodeURIComponent();
+			this.checkBody('decodeURIComponent').encodeURIComponent();
+			this.checkBody('rep').replace(',' ,'');
+			this.checkBody('base64').clone('base64Buffer').decodeBase64(true);
+			this.checkBody('base64').decodeBase64();
+			this.checkBody('debase64').<span class="apidocCodeKeywordSpan">encodeBase64</span>();
+			this.checkBody('hash').clone('md5').md5();
+			this.checkBody('hash').clone('sha1').sha1();
+			this.checkBody('hash').clone('num1' ,1);
+			this.checkBody('json').toJson();
+			//console.log(this.request.body)
+			if(this.errors){
+				this.body = this.errors;
+...</pre></li>
     </ul>
 
 
@@ -1900,7 +2071,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('up').toUp();
+			this.checkBody('low').toLow();
+			this.checkBody('escape').escape();
+			this.checkBody('stripLow').stripLow();
+			this.checkBody('whitelist').whitelist('ll');
+			this.checkBody('blacklist').blacklist('ll');
+			this.checkBody('encodeURI').decodeURI();
+			this.checkBody('decodeURI').<span class="apidocCodeKeywordSpan">encodeURI</span>();
+			this.checkBody('encodeURIComponent').decodeURIComponent();
+			this.checkBody('decodeURIComponent').encodeURIComponent();
+			this.checkBody('rep').replace(',' ,'');
+			this.checkBody('base64').clone('base64Buffer').decodeBase64(true);
+			this.checkBody('base64').decodeBase64();
+			this.checkBody('debase64').encodeBase64();
+			this.checkBody('hash').clone('md5').md5();
+...</pre></li>
     </ul>
 
 
@@ -1918,7 +2105,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('escape').escape();
+			this.checkBody('stripLow').stripLow();
+			this.checkBody('whitelist').whitelist('ll');
+			this.checkBody('blacklist').blacklist('ll');
+			this.checkBody('encodeURI').decodeURI();
+			this.checkBody('decodeURI').encodeURI();
+			this.checkBody('encodeURIComponent').decodeURIComponent();
+			this.checkBody('decodeURIComponent').<span class="apidocCodeKeywordSpan">encodeURIComponent</span>();
+			this.checkBody('rep').replace(',' ,'');
+			this.checkBody('base64').clone('base64Buffer').decodeBase64(true);
+			this.checkBody('base64').decodeBase64();
+			this.checkBody('debase64').encodeBase64();
+			this.checkBody('hash').clone('md5').md5();
+			this.checkBody('hash').clone('sha1').sha1();
+			this.checkBody('hash').clone('num1' ,1);
+...</pre></li>
     </ul>
 
 
@@ -1937,7 +2140,23 @@ function*(file,context){
     }
     return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('optional').optional().len(1, 100).trim().toInt()
+			this.checkBody('optionalInt').optional().len(1, 100).trim().toInt()
+			this.checkBody('name').notEmpty().len(3,20);
+			this.checkBody('empty').empty();
+			this.checkBody('notBlank').notBlank();
+			this.checkBody('match').match(/^abc$/i);
+			this.checkBody('notMatch').notMatch(/^xyz$/i);
+			this.checkBody('ensure').<span class="apidocCodeKeywordSpan">ensure</span>(true);
+			this.checkBody('ensureNot').ensureNot(false);
+			this.checkBody('integer').isInt();
+			this.checkBody('integer').isInt(null, {min:12});
+			this.checkBody('integer').isInt(null, {max:12});
+			this.checkBody('integer').isInt(null, {min:12,max:12});
+			this.checkBody('stringInteger').isInt();
+			this.checkBody('stringInteger').isInt(null, {min:12});
+...</pre></li>
     </ul>
 
 
@@ -1956,7 +2175,23 @@ function*(file,context){
     }
     return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('optionalInt').optional().len(1, 100).trim().toInt()
+			this.checkBody('name').notEmpty().len(3,20);
+			this.checkBody('empty').empty();
+			this.checkBody('notBlank').notBlank();
+			this.checkBody('match').match(/^abc$/i);
+			this.checkBody('notMatch').notMatch(/^xyz$/i);
+			this.checkBody('ensure').ensure(true);
+			this.checkBody('ensureNot').<span class="apidocCodeKeywordSpan">ensureNot</span>(false);
+			this.checkBody('integer').isInt();
+			this.checkBody('integer').isInt(null, {min:12});
+			this.checkBody('integer').isInt(null, {max:12});
+			this.checkBody('integer').isInt(null, {min:12,max:12});
+			this.checkBody('stringInteger').isInt();
+			this.checkBody('stringInteger').isInt(null, {min:12});
+			this.checkBody('stringInteger').isInt(null, {max:12});
+...</pre></li>
     </ul>
 
 
@@ -2081,7 +2316,23 @@ Validator.prototype.isLength = function(min, max, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		app.router.post('/json',function*(){
+			this.checkBody('/', true).notEmpty();
+      this.checkBody('/store/bicycle/color', true).exist()
+      this.checkBody('/store/book[0]/price', true).get(0).eq(8.95);
+      this.checkBody('/store/book[0]/price', true).get(0).isFloat().eq(8.95);
+			this.checkBody('/store/book[0]/disabled', true).first().notEmpty().toBoolean()
+			this.checkBody('#/store/book[0]/category', true).first().trim().eq('reference');
+			this.checkBody('/store/book[*]/price', true).<span class="apidocCodeKeywordSpan">filter</span>(function(v,k,o){
+				return v&gt;10
+			}).first().gt(10)
+			if(this.errors) {
+        // console.log(this.errors)
+				this.status=500;
+			}else{
+				this.status=200;
+...</pre></li>
     </ul>
 
 
@@ -2131,7 +2382,23 @@ app.listen(3000);
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('stringInteger').isInt(null, {min:12,max:12});
+			this.checkBody('float_').isFloat();
+			this.checkBody('in').in([1,2]);
+			this.checkBody('eq').eq("eq");
+			this.checkBody('neq').neq("eq");
+			this.checkBody('number4').gt(3);
+			this.checkBody('number4').lt(5);
+			this.checkBody('number4').<span class="apidocCodeKeywordSpan">ge</span>(4);
+			this.checkBody('number4').le(4);
+			this.checkBody('number4').ge(3);
+			this.checkBody('number4').le(5);
+			this.checkBody('contains').contains("tain");
+			this.checkBody('notContains').notContains(" ");
+			this.checkBody('email').isEmail();
+			this.checkBody('url').isUrl();
+...</pre></li>
     </ul>
 
 
@@ -2539,7 +2806,23 @@ Validator.prototype.isCreditCard = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('color3').isHexColor();
+			this.checkBody('color4').isHexColor();
+			this.checkBody('low').isLowercase();
+			this.checkBody('up').isUppercase();
+			this.checkBody('div').isDivisibleBy(3);
+			this.checkBody('n').isNull();
+			this.checkBody('len').isLength(1,4);
+			this.checkBody('byteLenght').<span class="apidocCodeKeywordSpan">isByteLength</span>(4,6);
+			this.checkBody('uuid').isUUID();
+			this.checkBody('date').isDate();
+			this.checkBody('time').isTime();
+			this.checkBody('after').isAfter("2014-08-06");
+			this.checkBody('before').isBefore("2014-08-08");
+			this.checkBody('in').isIn();
+			this.checkBody('credit').isCreditCard();
+...</pre></li>
     </ul>
 
 
@@ -3075,7 +3358,23 @@ Validator.prototype.isMACAddress = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('len').isLength(1,4);
+			this.checkBody('byteLenght').isByteLength(4,6);
+			this.checkBody('uuid').isUUID();
+			this.checkBody('date').isDate();
+			this.checkBody('time').isTime();
+			this.checkBody('after').isAfter("2014-08-06");
+			this.checkBody('before').isBefore("2014-08-08");
+			this.checkBody('in').<span class="apidocCodeKeywordSpan">isIn</span>();
+			this.checkBody('credit').isCreditCard();
+			this.checkBody('isbn').isISBN();
+			this.checkBody('json').isJSON();
+			this.checkBody('mb').isMultibyte();
+			this.checkBody('ascii').isAscii();
+			this.checkBody('fw').isFullWidth();
+			this.checkBody('hw').isHalfWidth();
+...</pre></li>
     </ul>
 
 
@@ -3127,7 +3426,23 @@ Validator.prototype.isFloat = function(tip,options) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('number4').le(4);
+			this.checkBody('number4').ge(3);
+			this.checkBody('number4').le(5);
+			this.checkBody('contains').contains("tain");
+			this.checkBody('notContains').notContains(" ");
+			this.checkBody('email').isEmail();
+			this.checkBody('url').isUrl();
+			this.checkBody('ip').<span class="apidocCodeKeywordSpan">isIp</span>();
+			this.checkBody('alpha').isAlpha();
+			this.checkBody('numeric').isNumeric();
+			this.checkBody('an').isAlphanumeric();
+			this.checkBody('base64').isBase64();
+			this.checkBody('hex').isHexadecimal();
+			this.checkBody('color1').isHexColor();
+			this.checkBody('color2').isHexColor();
+...</pre></li>
     </ul>
 
 
@@ -3190,7 +3505,23 @@ Validator.prototype.isMultibyte = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('color2').isHexColor();
+			this.checkBody('color3').isHexColor();
+			this.checkBody('color4').isHexColor();
+			this.checkBody('low').isLowercase();
+			this.checkBody('up').isUppercase();
+			this.checkBody('div').isDivisibleBy(3);
+			this.checkBody('n').isNull();
+			this.checkBody('len').<span class="apidocCodeKeywordSpan">isLength</span>(1,4);
+			this.checkBody('byteLenght').isByteLength(4,6);
+			this.checkBody('uuid').isUUID();
+			this.checkBody('date').isDate();
+			this.checkBody('time').isTime();
+			this.checkBody('after').isAfter("2014-08-06");
+			this.checkBody('before').isBefore("2014-08-08");
+			this.checkBody('in').isIn();
+...</pre></li>
     </ul>
 
 
@@ -3448,7 +3779,23 @@ Validator.prototype.isCurrency = function(tip,options) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('up').isUppercase();
+			this.checkBody('div').isDivisibleBy(3);
+			this.checkBody('n').isNull();
+			this.checkBody('len').isLength(1,4);
+			this.checkBody('byteLenght').isByteLength(4,6);
+			this.checkBody('uuid').isUUID();
+			this.checkBody('date').isDate();
+			this.checkBody('time').<span class="apidocCodeKeywordSpan">isTime</span>();
+			this.checkBody('after').isAfter("2014-08-06");
+			this.checkBody('before').isBefore("2014-08-08");
+			this.checkBody('in').isIn();
+			this.checkBody('credit').isCreditCard();
+			this.checkBody('isbn').isISBN();
+			this.checkBody('json').isJSON();
+			this.checkBody('mb').isMultibyte();
+...</pre></li>
     </ul>
 
 
@@ -3535,7 +3882,23 @@ Validator.prototype.isDivisibleBy = function(n, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('number4').ge(4);
+			this.checkBody('number4').le(4);
+			this.checkBody('number4').ge(3);
+			this.checkBody('number4').le(5);
+			this.checkBody('contains').contains("tain");
+			this.checkBody('notContains').notContains(" ");
+			this.checkBody('email').isEmail();
+			this.checkBody('url').<span class="apidocCodeKeywordSpan">isUrl</span>();
+			this.checkBody('ip').isIp();
+			this.checkBody('alpha').isAlpha();
+			this.checkBody('numeric').isNumeric();
+			this.checkBody('an').isAlphanumeric();
+			this.checkBody('base64').isBase64();
+			this.checkBody('hex').isHexadecimal();
+			this.checkBody('color1').isHexColor();
+...</pre></li>
     </ul>
 
 
@@ -3587,7 +3950,23 @@ Validator.prototype.isSurrogatePair = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('float_').isFloat();
+			this.checkBody('in').in([1,2]);
+			this.checkBody('eq').eq("eq");
+			this.checkBody('neq').neq("eq");
+			this.checkBody('number4').gt(3);
+			this.checkBody('number4').lt(5);
+			this.checkBody('number4').ge(4);
+			this.checkBody('number4').<span class="apidocCodeKeywordSpan">le</span>(4);
+			this.checkBody('number4').ge(3);
+			this.checkBody('number4').le(5);
+			this.checkBody('contains').contains("tain");
+			this.checkBody('notContains').notContains(" ");
+			this.checkBody('email').isEmail();
+			this.checkBody('url').isUrl();
+			this.checkBody('ip').isIp();
+...</pre></li>
     </ul>
 
 
@@ -3722,7 +4101,23 @@ Validator.prototype.rtrim = function(c) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		app.router.post('/validate',function*(){
+			this.checkBody('optional').optional().len(3,20);
+			this.checkBody('optional').optional().len(1, 100).trim().toInt()
+			this.checkBody('optionalInt').optional().len(1, 100).trim().toInt()
+			this.checkBody('name').notEmpty().len(3,20);
+			this.checkBody('empty').empty();
+			this.checkBody('notBlank').notBlank();
+			this.checkBody('match').<span class="apidocCodeKeywordSpan">match</span>(/^abc$/i);
+			this.checkBody('notMatch').notMatch(/^xyz$/i);
+			this.checkBody('ensure').ensure(true);
+			this.checkBody('ensureNot').ensureNot(false);
+			this.checkBody('integer').isInt();
+			this.checkBody('integer').isInt(null, {min:12});
+			this.checkBody('integer').isInt(null, {max:12});
+			this.checkBody('integer').isInt(null, {min:12,max:12});
+...</pre></li>
     </ul>
 
 
@@ -3773,7 +4168,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('stringInteger').isInt();
+			this.checkBody('stringInteger').isInt(null, {min:12});
+			this.checkBody('stringInteger').isInt(null, {max:12});
+			this.checkBody('stringInteger').isInt(null, {min:12,max:12});
+			this.checkBody('float_').isFloat();
+			this.checkBody('in').in([1,2]);
+			this.checkBody('eq').eq("eq");
+			this.checkBody('neq').<span class="apidocCodeKeywordSpan">neq</span>("eq");
+			this.checkBody('number4').gt(3);
+			this.checkBody('number4').lt(5);
+			this.checkBody('number4').ge(4);
+			this.checkBody('number4').le(4);
+			this.checkBody('number4').ge(3);
+			this.checkBody('number4').le(5);
+			this.checkBody('contains').contains("tain");
+...</pre></li>
     </ul>
 
 
@@ -3792,7 +4203,23 @@ value)))) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		var app = appFactory.create(1);
+		app.router.post('/validate',function*(){
+			this.checkBody('optional').optional().len(3,20);
+			this.checkBody('optional').optional().len(1, 100).trim().toInt()
+			this.checkBody('optionalInt').optional().len(1, 100).trim().toInt()
+			this.checkBody('name').notEmpty().len(3,20);
+			this.checkBody('empty').empty();
+			this.checkBody('notBlank').<span class="apidocCodeKeywordSpan">notBlank</span>();
+			this.checkBody('match').match(/^abc$/i);
+			this.checkBody('notMatch').notMatch(/^xyz$/i);
+			this.checkBody('ensure').ensure(true);
+			this.checkBody('ensureNot').ensureNot(false);
+			this.checkBody('integer').isInt();
+			this.checkBody('integer').isInt(null, {min:12});
+			this.checkBody('integer').isInt(null, {max:12});
+...</pre></li>
     </ul>
 
 
@@ -3810,7 +4237,23 @@ value)))) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('number4').gt(3);
+			this.checkBody('number4').lt(5);
+			this.checkBody('number4').ge(4);
+			this.checkBody('number4').le(4);
+			this.checkBody('number4').ge(3);
+			this.checkBody('number4').le(5);
+			this.checkBody('contains').contains("tain");
+			this.checkBody('notContains').<span class="apidocCodeKeywordSpan">notContains</span>(" ");
+			this.checkBody('email').isEmail();
+			this.checkBody('url').isUrl();
+			this.checkBody('ip').isIp();
+			this.checkBody('alpha').isAlpha();
+			this.checkBody('numeric').isNumeric();
+			this.checkBody('an').isAlphanumeric();
+			this.checkBody('base64').isBase64();
+...</pre></li>
     </ul>
 
 
@@ -3863,7 +4306,23 @@ function*(file,context){
     }
     return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('optional').optional().len(3,20);
+			this.checkBody('optional').optional().len(1, 100).trim().toInt()
+			this.checkBody('optionalInt').optional().len(1, 100).trim().toInt()
+			this.checkBody('name').notEmpty().len(3,20);
+			this.checkBody('empty').empty();
+			this.checkBody('notBlank').notBlank();
+			this.checkBody('match').match(/^abc$/i);
+			this.checkBody('notMatch').<span class="apidocCodeKeywordSpan">notMatch</span>(/^xyz$/i);
+			this.checkBody('ensure').ensure(true);
+			this.checkBody('ensureNot').ensureNot(false);
+			this.checkBody('integer').isInt();
+			this.checkBody('integer').isInt(null, {min:12});
+			this.checkBody('integer').isInt(null, {max:12});
+			this.checkBody('integer').isInt(null, {min:12,max:12});
+			this.checkBody('stringInteger').isInt();
+...</pre></li>
     </ul>
 
 
@@ -3983,7 +4442,23 @@ Validator.prototype.escape = function() {
 	this.hash('sha1');
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('encodeURIComponent').decodeURIComponent();
+			this.checkBody('decodeURIComponent').encodeURIComponent();
+			this.checkBody('rep').replace(',' ,'');
+			this.checkBody('base64').clone('base64Buffer').decodeBase64(true);
+			this.checkBody('base64').decodeBase64();
+			this.checkBody('debase64').encodeBase64();
+			this.checkBody('hash').clone('md5').md5();
+			this.checkBody('hash').clone('sha1').<span class="apidocCodeKeywordSpan">sha1</span>();
+			this.checkBody('hash').clone('num1' ,1);
+			this.checkBody('json').toJson();
+			//console.log(this.request.body)
+			if(this.errors){
+				this.body = this.errors;
+				 return;
+			}
+...</pre></li>
     </ul>
 
 
@@ -4193,7 +4668,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('rep').replace(',' ,'');
+			this.checkBody('base64').clone('base64Buffer').decodeBase64(true);
+			this.checkBody('base64').decodeBase64();
+			this.checkBody('debase64').encodeBase64();
+			this.checkBody('hash').clone('md5').md5();
+			this.checkBody('hash').clone('sha1').sha1();
+			this.checkBody('hash').clone('num1' ,1);
+			this.checkBody('json').<span class="apidocCodeKeywordSpan">toJson</span>();
+			//console.log(this.request.body)
+			if(this.errors){
+				this.body = this.errors;
+				 return;
+			}
+			var body = this.request.body;
+			if('default' != body.default){
+...</pre></li>
     </ul>
 
 
@@ -4264,7 +4755,23 @@ router.get('/user/:id', function * () {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody('float_').toFloat();
+			this.checkBody('bool').toBoolean();
+			this.checkBody('falseValue').notEmpty('value is empty').toBoolean();
+			this.checkBody('date').toDate();
+			this.checkBody('trim').trim();
+			this.checkBody('ltrim').ltrim();
+			this.checkBody('rtrim').rtrim();
+			this.checkBody('up').<span class="apidocCodeKeywordSpan">toUp</span>();
+			this.checkBody('low').toLow();
+			this.checkBody('escape').escape();
+			this.checkBody('stripLow').stripLow();
+			this.checkBody('whitelist').whitelist('ll');
+			this.checkBody('blacklist').blacklist('ll');
+			this.checkBody('encodeURI').decodeURI();
+			this.checkBody('decodeURI').encodeURI();
+...</pre></li>
     </ul>
 
 
@@ -4350,7 +4857,24 @@ router.get('/user/:id', function * () {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+});
+
+describe('koa-validate type' , function(){
+it("type check" , function(done){
+  var app = appFactory.create(1);
+  app.router.post('/json',function*(){
+    this.checkBody('/', true).notEmpty();
+    this.checkBody('/store/book[0]/price', true).get(0).<span class="apidocCodeKeywordSpan">type</span>('number&amp;#
+x27;).type("primitive")
+    this.checkBody('/store/book[0]/price', true).get(0).type('hello') // should warn
+    this.checkBody('#/store/book[0]/category', true).first().type('string');
+    this.checkBody('/store/book[*]/price', true).type('array')
+    this.checkBody('/store/book[0]/publishDate', true).get(0).toDate().type('date').type('object')
+    if(this.errors) {
+      this.status=500;
+    }else{
+...</pre></li>
     </ul>
 
 

@@ -1237,7 +1237,23 @@
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+describe(&#x27;koa-validate&#x27; , function(){
+	// this.timeout(100000);
+	it(&#x22;file check ok&#x22; , function(done){
+		var app = appFactory.create(1);
+		app.router.post(&#x27;/upload&#x27;,function*(){
+			this.checkFile(&#x27;empty&#x27;).empty();
+			// this.checkFile(&#x27;file1&#x27;).empty().<span class="apidocCodeKeywordSpan">contentTypeMatch</span>(/^text/);
+			this.checkFile(&#x27;file&#x27;).empty().contentTypeMatch(/^application\//);
+			yield this.checkFile(&#x27;file1&#x27;).empty().move(__dirname+&#x22;/temp&#x22;, function(file , context){
+			});
+			this.checkFile(&#x27;file&#x27;).notEmpty();
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname+&#x22;/tempdir/&#x22; , function(file , context){
+			});
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname);
+...</pre></li>
     </ul>
 
 
@@ -1317,7 +1333,26 @@ afterCopy:it can be a `function` or `function*`.interface:`function(fileObject,f
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkFile(&#x27;file&#x27;).notEmpty();
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname+&#x22;/tempdir/&#x22; , function(file , context){
+			});
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname);
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(function(){return __dirname+&#x22;/temp&#x22;});
+			yield (yield this.checkFile(&#x27;file&#x27;).notEmpty().fileNameMatch(/^.*.js$/).size(0,10*1024).suffixIn([&#x27;js&#x27;]).
+copy(function*(obj){
+				return __dirname+&#x22;/temp&#x22;;
+			})).<span class="apidocCodeKeywordSpan">delete</span>();
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/temp&#x27;);
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/&#x27;+require(&#x27;path&#x27;).basename(this.request.body.files.file.path
+));
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/tempdir/&#x27;+require(&#x27;path&#x27;).basename(this.request.body.files
+.file.path));
+			// require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/tempdir&#x27;);
+			if(this.errors){
+				this.body = this.errors;
+				return;
+...</pre></li>
     </ul>
 
 
@@ -1338,7 +1373,26 @@ afterCopy:it can be a `function` or `function*`.interface:`function(fileObject,f
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			yield this.checkFile(&#x27;file1&#x27;).empty().move(__dirname+&#x22;/temp&#x22;, function(file , context){
+			});
+			this.checkFile(&#x27;file&#x27;).notEmpty();
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname+&#x22;/tempdir/&#x22; , function(file , context){
+			});
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname);
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(function(){return __dirname+&#x22;/temp&#x22;});
+			yield (yield this.checkFile(&#x27;file&#x27;).notEmpty().<span class="apidocCodeKeywordSpan">fileNameMatch</span>(/^.*.js$/).
+size(0,10*1024).suffixIn([&#x27;js&#x27;]).copy(function*(obj){
+				return __dirname+&#x22;/temp&#x22;;
+			})).delete();
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/temp&#x27;);
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/&#x27;+require(&#x27;path&#x27;).basename(this.request.body.files.file.path
+));
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/tempdir/&#x27;+require(&#x27;path&#x27;).basename(this.request.body.files
+.file.path));
+			// require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/tempdir&#x27;);
+			if(this.errors){
+...</pre></li>
     </ul>
 
 
@@ -1359,7 +1413,24 @@ afterCopy:it can be a `function` or `function*`.interface:`function(fileObject,f
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkFile(&#x27;file0&#x27;).size(10,10 );
+			this.checkFile(&#x27;file&#x27;).size(1024*100,1024*1024*10 );
+			this.checkFile(&#x27;file1&#x27;).size(1024*100,1024*1024*1024*10 );
+			this.checkFile(&#x27;file2&#x27;).suffixIn([&#x27;png&#x27;]);
+			this.checkFile(&#x27;file3&#x27;).contentTypeMatch(/^image\/.*$/);
+			this.checkFile(&#x27;file4&#x27;).contentTypeMatch(/^image\/.*$/);
+			this.checkFile(&#x27;file5&#x27;).fileNameMatch(/\.png$/);
+			this.checkFile(&#x27;file6&#x27;).<span class="apidocCodeKeywordSpan">isImageContentType</span>(&#x22;not image content type.&#
+x22;);
+
+
+			if(9 === this.errors.length){
+				this.body = &#x27;ok&#x27;;
+				return ;
+			}else{
+				this.body = &#x27;not ok&#x27;;
+...</pre></li>
     </ul>
 
 
@@ -1501,7 +1572,26 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			yield this.checkFile(&#x27;file1&#x27;).empty().move(__dirname+&#x22;/temp&#x22;, function(file , context){
+			});
+			this.checkFile(&#x27;file&#x27;).notEmpty();
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname+&#x22;/tempdir/&#x22; , function(file , context){
+			});
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(__dirname);
+			yield this.checkFile(&#x27;file&#x27;).notEmpty().copy(function(){return __dirname+&#x22;/temp&#x22;});
+			yield (yield this.checkFile(&#x27;file&#x27;).notEmpty().fileNameMatch(/^.*.js$/).size(0,10*1024).<span class="apidocCodeKeywordSpan
+">suffixIn</span>([&#x27;js&#x27;]).copy(function*(obj){
+				return __dirname+&#x22;/temp&#x22;;
+			})).delete();
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/temp&#x27;);
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/&#x27;+require(&#x27;path&#x27;).basename(this.request.body.files.file.path
+));
+			require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/tempdir/&#x27;+require(&#x27;path&#x27;).basename(this.request.body.files
+.file.path));
+			// require(&#x27;fs&#x27;).unlinkSync(__dirname+&#x27;/tempdir&#x27;);
+			if(this.errors){
+...</pre></li>
     </ul>
 
 
@@ -1773,7 +1863,24 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;whitelist&#x27;).whitelist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;blacklist&#x27;).blacklist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;encodeURI&#x27;).decodeURI();
+			this.checkBody(&#x27;decodeURI&#x27;).encodeURI();
+			this.checkBody(&#x27;encodeURIComponent&#x27;).decodeURIComponent();
+			this.checkBody(&#x27;decodeURIComponent&#x27;).encodeURIComponent();
+			this.checkBody(&#x27;rep&#x27;).replace(&#x27;,&#x27; ,&#x27;&#x27;);
+			this.checkBody(&#x27;base64&#x27;).clone(&#x27;base64Buffer&#x27;).<span class="apidocCodeKeywordSpan">decodeBase64</span>(true
+);
+			this.checkBody(&#x27;base64&#x27;).decodeBase64();
+			this.checkBody(&#x27;debase64&#x27;).encodeBase64();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;md5&#x27;).md5();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;sha1&#x27;).sha1();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;num1&#x27; ,1);
+			this.checkBody(&#x27;json&#x27;).toJson();
+			//console.log(this.request.body)
+...</pre></li>
     </ul>
 
 
@@ -1795,7 +1902,23 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		req.post(&#x27;/decodeURIComponent&#x27;)
+		.send({uri:&#x22;%&#x22;})
+		.expect(500 , done);
+	});
+	it(&#x22;bad uri decodeURI should not to be ok&#x22; , function(done){
+		var app = appFactory.create(1);
+		app.router.post(&#x27;/decodeURI&#x27;,function*(){
+			this.checkBody(&#x27;uri&#x27;).<span class="apidocCodeKeywordSpan">decodeURI</span>();
+			if(this.errors) {
+				this.status=500;
+			}else{
+				this.status=200;
+			}
+		});
+		var req = request(app.listen());
+...</pre></li>
     </ul>
 
 
@@ -1817,7 +1940,23 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+
+describe(&#x27;koa-validate&#x27; , function(){
+	it(&#x22;bad uri decodeURIComponent should not to be ok&#x22; , function(done){
+		var app = appFactory.create(1);
+		app.router.post(&#x27;/decodeURIComponent&#x27;,function*(){
+			this.checkBody(&#x27;uri&#x27;).<span class="apidocCodeKeywordSpan">decodeURIComponent</span>();
+			if(this.errors) {
+				this.status=500;
+			}else{
+				this.status=200;
+			}
+		});
+		var req = request(app.listen());
+...</pre></li>
     </ul>
 
 
@@ -1835,7 +1974,23 @@ Validator.prototype.notContains = function(s, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		.expect(200)
+		.expect(&#x27;ok&#x27; , done);
+	});
+	it(&#x27;there sanitizers should be to okay&#x27; , function(done){
+		var url =&#x22;http://www.google.com/&#x22;
+		var app = appFactory.create(1);
+		app.router.post(&#x27;/sanitizers&#x27;,function*(){
+			this.checkBody(&#x27;default&#x27;).<span class="apidocCodeKeywordSpan">default</span>(&#x27;default&#x27;);
+			this.checkBody(&#x27;int_&#x27;).toInt();
+			this.checkBody(&#x27;int_&#x27;).toInt(null, 10, {min:20});
+			this.checkBody(&#x27;int_&#x27;).toInt(null, 10, {max:20});
+			this.checkBody(&#x27;int_&#x27;).toInt(null, 10, {min:20,max:20});
+			this.checkBody(&#x27;octal_&#x27;).toInt(null, 8);
+			this.checkBody(&#x27;octal_&#x27;).toInt(null, 8, {min:8});
+			this.checkBody(&#x27;octal_&#x27;).toInt(null, 8, {max:8});
+...</pre></li>
     </ul>
 
 
@@ -1890,7 +2045,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;encodeURI&#x27;).decodeURI();
+			this.checkBody(&#x27;decodeURI&#x27;).encodeURI();
+			this.checkBody(&#x27;encodeURIComponent&#x27;).decodeURIComponent();
+			this.checkBody(&#x27;decodeURIComponent&#x27;).encodeURIComponent();
+			this.checkBody(&#x27;rep&#x27;).replace(&#x27;,&#x27; ,&#x27;&#x27;);
+			this.checkBody(&#x27;base64&#x27;).clone(&#x27;base64Buffer&#x27;).decodeBase64(true);
+			this.checkBody(&#x27;base64&#x27;).decodeBase64();
+			this.checkBody(&#x27;debase64&#x27;).<span class="apidocCodeKeywordSpan">encodeBase64</span>();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;md5&#x27;).md5();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;sha1&#x27;).sha1();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;num1&#x27; ,1);
+			this.checkBody(&#x27;json&#x27;).toJson();
+			//console.log(this.request.body)
+			if(this.errors){
+				this.body = this.errors;
+...</pre></li>
     </ul>
 
 
@@ -1908,7 +2079,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;up&#x27;).toUp();
+			this.checkBody(&#x27;low&#x27;).toLow();
+			this.checkBody(&#x27;escape&#x27;).escape();
+			this.checkBody(&#x27;stripLow&#x27;).stripLow();
+			this.checkBody(&#x27;whitelist&#x27;).whitelist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;blacklist&#x27;).blacklist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;encodeURI&#x27;).decodeURI();
+			this.checkBody(&#x27;decodeURI&#x27;).<span class="apidocCodeKeywordSpan">encodeURI</span>();
+			this.checkBody(&#x27;encodeURIComponent&#x27;).decodeURIComponent();
+			this.checkBody(&#x27;decodeURIComponent&#x27;).encodeURIComponent();
+			this.checkBody(&#x27;rep&#x27;).replace(&#x27;,&#x27; ,&#x27;&#x27;);
+			this.checkBody(&#x27;base64&#x27;).clone(&#x27;base64Buffer&#x27;).decodeBase64(true);
+			this.checkBody(&#x27;base64&#x27;).decodeBase64();
+			this.checkBody(&#x27;debase64&#x27;).encodeBase64();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;md5&#x27;).md5();
+...</pre></li>
     </ul>
 
 
@@ -1926,7 +2113,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;escape&#x27;).escape();
+			this.checkBody(&#x27;stripLow&#x27;).stripLow();
+			this.checkBody(&#x27;whitelist&#x27;).whitelist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;blacklist&#x27;).blacklist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;encodeURI&#x27;).decodeURI();
+			this.checkBody(&#x27;decodeURI&#x27;).encodeURI();
+			this.checkBody(&#x27;encodeURIComponent&#x27;).decodeURIComponent();
+			this.checkBody(&#x27;decodeURIComponent&#x27;).<span class="apidocCodeKeywordSpan">encodeURIComponent</span>();
+			this.checkBody(&#x27;rep&#x27;).replace(&#x27;,&#x27; ,&#x27;&#x27;);
+			this.checkBody(&#x27;base64&#x27;).clone(&#x27;base64Buffer&#x27;).decodeBase64(true);
+			this.checkBody(&#x27;base64&#x27;).decodeBase64();
+			this.checkBody(&#x27;debase64&#x27;).encodeBase64();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;md5&#x27;).md5();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;sha1&#x27;).sha1();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;num1&#x27; ,1);
+...</pre></li>
     </ul>
 
 
@@ -1945,7 +2148,23 @@ function*(file,context){
     }
     return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;optional&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;optionalInt&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;name&#x27;).notEmpty().len(3,20);
+			this.checkBody(&#x27;empty&#x27;).empty();
+			this.checkBody(&#x27;notBlank&#x27;).notBlank();
+			this.checkBody(&#x27;match&#x27;).match(/^abc$/i);
+			this.checkBody(&#x27;notMatch&#x27;).notMatch(/^xyz$/i);
+			this.checkBody(&#x27;ensure&#x27;).<span class="apidocCodeKeywordSpan">ensure</span>(true);
+			this.checkBody(&#x27;ensureNot&#x27;).ensureNot(false);
+			this.checkBody(&#x27;integer&#x27;).isInt();
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {max:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12,max:12});
+			this.checkBody(&#x27;stringInteger&#x27;).isInt();
+			this.checkBody(&#x27;stringInteger&#x27;).isInt(null, {min:12});
+...</pre></li>
     </ul>
 
 
@@ -1964,7 +2183,23 @@ function*(file,context){
     }
     return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;optionalInt&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;name&#x27;).notEmpty().len(3,20);
+			this.checkBody(&#x27;empty&#x27;).empty();
+			this.checkBody(&#x27;notBlank&#x27;).notBlank();
+			this.checkBody(&#x27;match&#x27;).match(/^abc$/i);
+			this.checkBody(&#x27;notMatch&#x27;).notMatch(/^xyz$/i);
+			this.checkBody(&#x27;ensure&#x27;).ensure(true);
+			this.checkBody(&#x27;ensureNot&#x27;).<span class="apidocCodeKeywordSpan">ensureNot</span>(false);
+			this.checkBody(&#x27;integer&#x27;).isInt();
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {max:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12,max:12});
+			this.checkBody(&#x27;stringInteger&#x27;).isInt();
+			this.checkBody(&#x27;stringInteger&#x27;).isInt(null, {min:12});
+			this.checkBody(&#x27;stringInteger&#x27;).isInt(null, {max:12});
+...</pre></li>
     </ul>
 
 
@@ -2089,7 +2324,23 @@ Validator.prototype.isLength = function(min, max, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		app.router.post(&#x27;/json&#x27;,function*(){
+			this.checkBody(&#x27;/&#x27;, true).notEmpty();
+      this.checkBody(&#x27;/store/bicycle/color&#x27;, true).exist()
+      this.checkBody(&#x27;/store/book[0]/price&#x27;, true).get(0).eq(8.95);
+      this.checkBody(&#x27;/store/book[0]/price&#x27;, true).get(0).isFloat().eq(8.95);
+			this.checkBody(&#x27;/store/book[0]/disabled&#x27;, true).first().notEmpty().toBoolean()
+			this.checkBody(&#x27;#/store/book[0]/category&#x27;, true).first().trim().eq(&#x27;reference&#x27;);
+			this.checkBody(&#x27;/store/book[*]/price&#x27;, true).<span class="apidocCodeKeywordSpan">filter</span>(function(v,k,o){
+				return v&#x3e;10
+			}).first().gt(10)
+			if(this.errors) {
+        // console.log(this.errors)
+				this.status=500;
+			}else{
+				this.status=200;
+...</pre></li>
     </ul>
 
 
@@ -2139,7 +2390,23 @@ app.listen(3000);
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;stringInteger&#x27;).isInt(null, {min:12,max:12});
+			this.checkBody(&#x27;float_&#x27;).isFloat();
+			this.checkBody(&#x27;in&#x27;).in([1,2]);
+			this.checkBody(&#x27;eq&#x27;).eq(&#x22;eq&#x22;);
+			this.checkBody(&#x27;neq&#x27;).neq(&#x22;eq&#x22;);
+			this.checkBody(&#x27;number4&#x27;).gt(3);
+			this.checkBody(&#x27;number4&#x27;).lt(5);
+			this.checkBody(&#x27;number4&#x27;).<span class="apidocCodeKeywordSpan">ge</span>(4);
+			this.checkBody(&#x27;number4&#x27;).le(4);
+			this.checkBody(&#x27;number4&#x27;).ge(3);
+			this.checkBody(&#x27;number4&#x27;).le(5);
+			this.checkBody(&#x27;contains&#x27;).contains(&#x22;tain&#x22;);
+			this.checkBody(&#x27;notContains&#x27;).notContains(&#x22; &#x22;);
+			this.checkBody(&#x27;email&#x27;).isEmail();
+			this.checkBody(&#x27;url&#x27;).isUrl();
+...</pre></li>
     </ul>
 
 
@@ -2547,7 +2814,23 @@ Validator.prototype.isCreditCard = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;color3&#x27;).isHexColor();
+			this.checkBody(&#x27;color4&#x27;).isHexColor();
+			this.checkBody(&#x27;low&#x27;).isLowercase();
+			this.checkBody(&#x27;up&#x27;).isUppercase();
+			this.checkBody(&#x27;div&#x27;).isDivisibleBy(3);
+			this.checkBody(&#x27;n&#x27;).isNull();
+			this.checkBody(&#x27;len&#x27;).isLength(1,4);
+			this.checkBody(&#x27;byteLenght&#x27;).<span class="apidocCodeKeywordSpan">isByteLength</span>(4,6);
+			this.checkBody(&#x27;uuid&#x27;).isUUID();
+			this.checkBody(&#x27;date&#x27;).isDate();
+			this.checkBody(&#x27;time&#x27;).isTime();
+			this.checkBody(&#x27;after&#x27;).isAfter(&#x22;2014-08-06&#x22;);
+			this.checkBody(&#x27;before&#x27;).isBefore(&#x22;2014-08-08&#x22;);
+			this.checkBody(&#x27;in&#x27;).isIn();
+			this.checkBody(&#x27;credit&#x27;).isCreditCard();
+...</pre></li>
     </ul>
 
 
@@ -3083,7 +3366,23 @@ Validator.prototype.isMACAddress = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;len&#x27;).isLength(1,4);
+			this.checkBody(&#x27;byteLenght&#x27;).isByteLength(4,6);
+			this.checkBody(&#x27;uuid&#x27;).isUUID();
+			this.checkBody(&#x27;date&#x27;).isDate();
+			this.checkBody(&#x27;time&#x27;).isTime();
+			this.checkBody(&#x27;after&#x27;).isAfter(&#x22;2014-08-06&#x22;);
+			this.checkBody(&#x27;before&#x27;).isBefore(&#x22;2014-08-08&#x22;);
+			this.checkBody(&#x27;in&#x27;).<span class="apidocCodeKeywordSpan">isIn</span>();
+			this.checkBody(&#x27;credit&#x27;).isCreditCard();
+			this.checkBody(&#x27;isbn&#x27;).isISBN();
+			this.checkBody(&#x27;json&#x27;).isJSON();
+			this.checkBody(&#x27;mb&#x27;).isMultibyte();
+			this.checkBody(&#x27;ascii&#x27;).isAscii();
+			this.checkBody(&#x27;fw&#x27;).isFullWidth();
+			this.checkBody(&#x27;hw&#x27;).isHalfWidth();
+...</pre></li>
     </ul>
 
 
@@ -3135,7 +3434,23 @@ Validator.prototype.isFloat = function(tip,options) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;number4&#x27;).le(4);
+			this.checkBody(&#x27;number4&#x27;).ge(3);
+			this.checkBody(&#x27;number4&#x27;).le(5);
+			this.checkBody(&#x27;contains&#x27;).contains(&#x22;tain&#x22;);
+			this.checkBody(&#x27;notContains&#x27;).notContains(&#x22; &#x22;);
+			this.checkBody(&#x27;email&#x27;).isEmail();
+			this.checkBody(&#x27;url&#x27;).isUrl();
+			this.checkBody(&#x27;ip&#x27;).<span class="apidocCodeKeywordSpan">isIp</span>();
+			this.checkBody(&#x27;alpha&#x27;).isAlpha();
+			this.checkBody(&#x27;numeric&#x27;).isNumeric();
+			this.checkBody(&#x27;an&#x27;).isAlphanumeric();
+			this.checkBody(&#x27;base64&#x27;).isBase64();
+			this.checkBody(&#x27;hex&#x27;).isHexadecimal();
+			this.checkBody(&#x27;color1&#x27;).isHexColor();
+			this.checkBody(&#x27;color2&#x27;).isHexColor();
+...</pre></li>
     </ul>
 
 
@@ -3198,7 +3513,23 @@ Validator.prototype.isMultibyte = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;color2&#x27;).isHexColor();
+			this.checkBody(&#x27;color3&#x27;).isHexColor();
+			this.checkBody(&#x27;color4&#x27;).isHexColor();
+			this.checkBody(&#x27;low&#x27;).isLowercase();
+			this.checkBody(&#x27;up&#x27;).isUppercase();
+			this.checkBody(&#x27;div&#x27;).isDivisibleBy(3);
+			this.checkBody(&#x27;n&#x27;).isNull();
+			this.checkBody(&#x27;len&#x27;).<span class="apidocCodeKeywordSpan">isLength</span>(1,4);
+			this.checkBody(&#x27;byteLenght&#x27;).isByteLength(4,6);
+			this.checkBody(&#x27;uuid&#x27;).isUUID();
+			this.checkBody(&#x27;date&#x27;).isDate();
+			this.checkBody(&#x27;time&#x27;).isTime();
+			this.checkBody(&#x27;after&#x27;).isAfter(&#x22;2014-08-06&#x22;);
+			this.checkBody(&#x27;before&#x27;).isBefore(&#x22;2014-08-08&#x22;);
+			this.checkBody(&#x27;in&#x27;).isIn();
+...</pre></li>
     </ul>
 
 
@@ -3456,7 +3787,23 @@ Validator.prototype.isCurrency = function(tip,options) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;up&#x27;).isUppercase();
+			this.checkBody(&#x27;div&#x27;).isDivisibleBy(3);
+			this.checkBody(&#x27;n&#x27;).isNull();
+			this.checkBody(&#x27;len&#x27;).isLength(1,4);
+			this.checkBody(&#x27;byteLenght&#x27;).isByteLength(4,6);
+			this.checkBody(&#x27;uuid&#x27;).isUUID();
+			this.checkBody(&#x27;date&#x27;).isDate();
+			this.checkBody(&#x27;time&#x27;).<span class="apidocCodeKeywordSpan">isTime</span>();
+			this.checkBody(&#x27;after&#x27;).isAfter(&#x22;2014-08-06&#x22;);
+			this.checkBody(&#x27;before&#x27;).isBefore(&#x22;2014-08-08&#x22;);
+			this.checkBody(&#x27;in&#x27;).isIn();
+			this.checkBody(&#x27;credit&#x27;).isCreditCard();
+			this.checkBody(&#x27;isbn&#x27;).isISBN();
+			this.checkBody(&#x27;json&#x27;).isJSON();
+			this.checkBody(&#x27;mb&#x27;).isMultibyte();
+...</pre></li>
     </ul>
 
 
@@ -3543,7 +3890,23 @@ Validator.prototype.isDivisibleBy = function(n, tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;number4&#x27;).ge(4);
+			this.checkBody(&#x27;number4&#x27;).le(4);
+			this.checkBody(&#x27;number4&#x27;).ge(3);
+			this.checkBody(&#x27;number4&#x27;).le(5);
+			this.checkBody(&#x27;contains&#x27;).contains(&#x22;tain&#x22;);
+			this.checkBody(&#x27;notContains&#x27;).notContains(&#x22; &#x22;);
+			this.checkBody(&#x27;email&#x27;).isEmail();
+			this.checkBody(&#x27;url&#x27;).<span class="apidocCodeKeywordSpan">isUrl</span>();
+			this.checkBody(&#x27;ip&#x27;).isIp();
+			this.checkBody(&#x27;alpha&#x27;).isAlpha();
+			this.checkBody(&#x27;numeric&#x27;).isNumeric();
+			this.checkBody(&#x27;an&#x27;).isAlphanumeric();
+			this.checkBody(&#x27;base64&#x27;).isBase64();
+			this.checkBody(&#x27;hex&#x27;).isHexadecimal();
+			this.checkBody(&#x27;color1&#x27;).isHexColor();
+...</pre></li>
     </ul>
 
 
@@ -3595,7 +3958,23 @@ Validator.prototype.isSurrogatePair = function(tip) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;float_&#x27;).isFloat();
+			this.checkBody(&#x27;in&#x27;).in([1,2]);
+			this.checkBody(&#x27;eq&#x27;).eq(&#x22;eq&#x22;);
+			this.checkBody(&#x27;neq&#x27;).neq(&#x22;eq&#x22;);
+			this.checkBody(&#x27;number4&#x27;).gt(3);
+			this.checkBody(&#x27;number4&#x27;).lt(5);
+			this.checkBody(&#x27;number4&#x27;).ge(4);
+			this.checkBody(&#x27;number4&#x27;).<span class="apidocCodeKeywordSpan">le</span>(4);
+			this.checkBody(&#x27;number4&#x27;).ge(3);
+			this.checkBody(&#x27;number4&#x27;).le(5);
+			this.checkBody(&#x27;contains&#x27;).contains(&#x22;tain&#x22;);
+			this.checkBody(&#x27;notContains&#x27;).notContains(&#x22; &#x22;);
+			this.checkBody(&#x27;email&#x27;).isEmail();
+			this.checkBody(&#x27;url&#x27;).isUrl();
+			this.checkBody(&#x27;ip&#x27;).isIp();
+...</pre></li>
     </ul>
 
 
@@ -3730,7 +4109,23 @@ Validator.prototype.rtrim = function(c) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		app.router.post(&#x27;/validate&#x27;,function*(){
+			this.checkBody(&#x27;optional&#x27;).optional().len(3,20);
+			this.checkBody(&#x27;optional&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;optionalInt&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;name&#x27;).notEmpty().len(3,20);
+			this.checkBody(&#x27;empty&#x27;).empty();
+			this.checkBody(&#x27;notBlank&#x27;).notBlank();
+			this.checkBody(&#x27;match&#x27;).<span class="apidocCodeKeywordSpan">match</span>(/^abc$/i);
+			this.checkBody(&#x27;notMatch&#x27;).notMatch(/^xyz$/i);
+			this.checkBody(&#x27;ensure&#x27;).ensure(true);
+			this.checkBody(&#x27;ensureNot&#x27;).ensureNot(false);
+			this.checkBody(&#x27;integer&#x27;).isInt();
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {max:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12,max:12});
+...</pre></li>
     </ul>
 
 
@@ -3781,7 +4176,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;stringInteger&#x27;).isInt();
+			this.checkBody(&#x27;stringInteger&#x27;).isInt(null, {min:12});
+			this.checkBody(&#x27;stringInteger&#x27;).isInt(null, {max:12});
+			this.checkBody(&#x27;stringInteger&#x27;).isInt(null, {min:12,max:12});
+			this.checkBody(&#x27;float_&#x27;).isFloat();
+			this.checkBody(&#x27;in&#x27;).in([1,2]);
+			this.checkBody(&#x27;eq&#x27;).eq(&#x22;eq&#x22;);
+			this.checkBody(&#x27;neq&#x27;).<span class="apidocCodeKeywordSpan">neq</span>(&#x22;eq&#x22;);
+			this.checkBody(&#x27;number4&#x27;).gt(3);
+			this.checkBody(&#x27;number4&#x27;).lt(5);
+			this.checkBody(&#x27;number4&#x27;).ge(4);
+			this.checkBody(&#x27;number4&#x27;).le(4);
+			this.checkBody(&#x27;number4&#x27;).ge(3);
+			this.checkBody(&#x27;number4&#x27;).le(5);
+			this.checkBody(&#x27;contains&#x27;).contains(&#x22;tain&#x22;);
+...</pre></li>
     </ul>
 
 
@@ -3800,7 +4211,23 @@ value)))) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		var app = appFactory.create(1);
+		app.router.post(&#x27;/validate&#x27;,function*(){
+			this.checkBody(&#x27;optional&#x27;).optional().len(3,20);
+			this.checkBody(&#x27;optional&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;optionalInt&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;name&#x27;).notEmpty().len(3,20);
+			this.checkBody(&#x27;empty&#x27;).empty();
+			this.checkBody(&#x27;notBlank&#x27;).<span class="apidocCodeKeywordSpan">notBlank</span>();
+			this.checkBody(&#x27;match&#x27;).match(/^abc$/i);
+			this.checkBody(&#x27;notMatch&#x27;).notMatch(/^xyz$/i);
+			this.checkBody(&#x27;ensure&#x27;).ensure(true);
+			this.checkBody(&#x27;ensureNot&#x27;).ensureNot(false);
+			this.checkBody(&#x27;integer&#x27;).isInt();
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {max:12});
+...</pre></li>
     </ul>
 
 
@@ -3818,7 +4245,23 @@ value)))) {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;number4&#x27;).gt(3);
+			this.checkBody(&#x27;number4&#x27;).lt(5);
+			this.checkBody(&#x27;number4&#x27;).ge(4);
+			this.checkBody(&#x27;number4&#x27;).le(4);
+			this.checkBody(&#x27;number4&#x27;).ge(3);
+			this.checkBody(&#x27;number4&#x27;).le(5);
+			this.checkBody(&#x27;contains&#x27;).contains(&#x22;tain&#x22;);
+			this.checkBody(&#x27;notContains&#x27;).<span class="apidocCodeKeywordSpan">notContains</span>(&#x22; &#x22;);
+			this.checkBody(&#x27;email&#x27;).isEmail();
+			this.checkBody(&#x27;url&#x27;).isUrl();
+			this.checkBody(&#x27;ip&#x27;).isIp();
+			this.checkBody(&#x27;alpha&#x27;).isAlpha();
+			this.checkBody(&#x27;numeric&#x27;).isNumeric();
+			this.checkBody(&#x27;an&#x27;).isAlphanumeric();
+			this.checkBody(&#x27;base64&#x27;).isBase64();
+...</pre></li>
     </ul>
 
 
@@ -3871,7 +4314,23 @@ function*(file,context){
     }
     return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;optional&#x27;).optional().len(3,20);
+			this.checkBody(&#x27;optional&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;optionalInt&#x27;).optional().len(1, 100).trim().toInt()
+			this.checkBody(&#x27;name&#x27;).notEmpty().len(3,20);
+			this.checkBody(&#x27;empty&#x27;).empty();
+			this.checkBody(&#x27;notBlank&#x27;).notBlank();
+			this.checkBody(&#x27;match&#x27;).match(/^abc$/i);
+			this.checkBody(&#x27;notMatch&#x27;).<span class="apidocCodeKeywordSpan">notMatch</span>(/^xyz$/i);
+			this.checkBody(&#x27;ensure&#x27;).ensure(true);
+			this.checkBody(&#x27;ensureNot&#x27;).ensureNot(false);
+			this.checkBody(&#x27;integer&#x27;).isInt();
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {max:12});
+			this.checkBody(&#x27;integer&#x27;).isInt(null, {min:12,max:12});
+			this.checkBody(&#x27;stringInteger&#x27;).isInt();
+...</pre></li>
     </ul>
 
 
@@ -3991,7 +4450,23 @@ Validator.prototype.escape = function() {
 	this.hash(&#x27;sha1&#x27;);
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;encodeURIComponent&#x27;).decodeURIComponent();
+			this.checkBody(&#x27;decodeURIComponent&#x27;).encodeURIComponent();
+			this.checkBody(&#x27;rep&#x27;).replace(&#x27;,&#x27; ,&#x27;&#x27;);
+			this.checkBody(&#x27;base64&#x27;).clone(&#x27;base64Buffer&#x27;).decodeBase64(true);
+			this.checkBody(&#x27;base64&#x27;).decodeBase64();
+			this.checkBody(&#x27;debase64&#x27;).encodeBase64();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;md5&#x27;).md5();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;sha1&#x27;).<span class="apidocCodeKeywordSpan">sha1</span>();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;num1&#x27; ,1);
+			this.checkBody(&#x27;json&#x27;).toJson();
+			//console.log(this.request.body)
+			if(this.errors){
+				this.body = this.errors;
+				 return;
+			}
+...</pre></li>
     </ul>
 
 
@@ -4201,7 +4676,23 @@ function*(file,context){
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;rep&#x27;).replace(&#x27;,&#x27; ,&#x27;&#x27;);
+			this.checkBody(&#x27;base64&#x27;).clone(&#x27;base64Buffer&#x27;).decodeBase64(true);
+			this.checkBody(&#x27;base64&#x27;).decodeBase64();
+			this.checkBody(&#x27;debase64&#x27;).encodeBase64();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;md5&#x27;).md5();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;sha1&#x27;).sha1();
+			this.checkBody(&#x27;hash&#x27;).clone(&#x27;num1&#x27; ,1);
+			this.checkBody(&#x27;json&#x27;).<span class="apidocCodeKeywordSpan">toJson</span>();
+			//console.log(this.request.body)
+			if(this.errors){
+				this.body = this.errors;
+				 return;
+			}
+			var body = this.request.body;
+			if(&#x27;default&#x27; != body.default){
+...</pre></li>
     </ul>
 
 
@@ -4273,7 +4764,23 @@ router.get(&#x27;/user/:id&#x27;, function * () {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+			this.checkBody(&#x27;float_&#x27;).toFloat();
+			this.checkBody(&#x27;bool&#x27;).toBoolean();
+			this.checkBody(&#x27;falseValue&#x27;).notEmpty(&#x27;value is empty&#x27;).toBoolean();
+			this.checkBody(&#x27;date&#x27;).toDate();
+			this.checkBody(&#x27;trim&#x27;).trim();
+			this.checkBody(&#x27;ltrim&#x27;).ltrim();
+			this.checkBody(&#x27;rtrim&#x27;).rtrim();
+			this.checkBody(&#x27;up&#x27;).<span class="apidocCodeKeywordSpan">toUp</span>();
+			this.checkBody(&#x27;low&#x27;).toLow();
+			this.checkBody(&#x27;escape&#x27;).escape();
+			this.checkBody(&#x27;stripLow&#x27;).stripLow();
+			this.checkBody(&#x27;whitelist&#x27;).whitelist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;blacklist&#x27;).blacklist(&#x27;ll&#x27;);
+			this.checkBody(&#x27;encodeURI&#x27;).decodeURI();
+			this.checkBody(&#x27;decodeURI&#x27;).encodeURI();
+...</pre></li>
     </ul>
 
 
@@ -4359,7 +4866,24 @@ router.get(&#x27;/user/:id&#x27;, function * () {
 	}
 	return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+});
+
+describe(&#x27;koa-validate type&#x27; , function(){
+it(&#x22;type check&#x22; , function(done){
+  var app = appFactory.create(1);
+  app.router.post(&#x27;/json&#x27;,function*(){
+    this.checkBody(&#x27;/&#x27;, true).notEmpty();
+    this.checkBody(&#x27;/store/book[0]/price&#x27;, true).get(0).<span class="apidocCodeKeywordSpan">type</span>(&#x27;number&#
+x27;).type(&#x22;primitive&#x22;)
+    this.checkBody(&#x27;/store/book[0]/price&#x27;, true).get(0).type(&#x27;hello&#x27;) // should warn
+    this.checkBody(&#x27;#/store/book[0]/category&#x27;, true).first().type(&#x27;string&#x27;);
+    this.checkBody(&#x27;/store/book[*]/price&#x27;, true).type(&#x27;array&#x27;)
+    this.checkBody(&#x27;/store/book[0]/publishDate&#x27;, true).get(0).toDate().type(&#x27;date&#x27;).type(&#x27;object&#x27;)
+    if(this.errors) {
+      this.status=500;
+    }else{
+...</pre></li>
     </ul>
 
 
